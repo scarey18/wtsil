@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>What Technology Should I Learn?</title>
+{% endblock %}
+
+
+{% block content %}
+<div class="content-container">
+	<h1>What Technology Should I Learn?</h1>
+
+	<form class="searchbar" method="get">
+		<input type="text" name="search" placeholder="City, State, Country, or Zipcode...">
+		<button type="submit">Search</button>
+	</form>
+
+	<section class="site-info">
+		Description of site and methodology.
+	</section>
+</div>
+{% endblock %}
