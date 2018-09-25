@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block head %}
 <title>What Technology Should I Learn?</title>
@@ -12,6 +13,7 @@
 	<form class="searchbar" method="get" autocomplete="off">
 		<div class="autocomplete-container">
 			<input type="text" name="search" placeholder="City, State, Country, etc...">
+			<input type="hidden" name="formatted">
 		</div>
 		<button type="submit">Search</button>
 	</form>
@@ -24,61 +26,5 @@
 
 
 {% block scripts %}
-<script>
-const form = document.querySelector('.searchbar');
-const input = document.querySelector('input');
-const autocompleteContainer = document.querySelector('.autocomplete-container');
-const categories = "City,Metro%20Area,Subregion,Region,Territory,Country,Zone";
-
-function autocomplete(text) {
-	const url = `http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?text=${text}&category=${categories}&f=json`;
-
-	fetch(url).then(response => {
-		if (response.ok) return response.json();
-	}).then(data => {
-		updateSuggestions(data.suggestions);
-	});
-}
-
-function updateSuggestions(suggestions) {
-	document.querySelectorAll('.suggestion').forEach(suggestion => {
-		autocompleteContainer.removeChild(suggestion);
-	});
-
-	suggestions.forEach(suggestion => {
-		const newDiv = document.createElement('div');
-		newDiv.classList.add('suggestion');
-		newDiv.textContent = suggestion.text;
-		newDiv.tabIndex = 0;
-		newDiv.addEventListener('click', () => selectSuggestion(suggestion.text));
-		newDiv.addEventListener('keydown', (e) => keyEvent(e));
-		autocompleteContainer.appendChild(newDiv);
-	});
-}
-
-function selectSuggestion(text) {
-	input.value = text;
-	form.submit();
-}
-
-function keyEvent(e) {
-	const suggestion = document.querySelector('.suggestion');
-	if (e.keyCode === 40 && suggestion) {
-		const node = e.target === input ? suggestion : e.target.nextSibling;
-		node.focus();
-	} else if (e.keyCode === 38 && suggestion) {
-		const node = e.target === suggestion ? input : e.target.previousSibling;
-		node.focus();
-	} else if (e.keyCode === 13 && e.target.classList.contains('suggestion')) {
-		selectSuggestion(e.target.textContent);
-	}
-}
-
-input.addEventListener('input', function() {
-	if (this.value.length >= 3) autocomplete(this.value);
-	else updateSuggestions([]);
-});
-
-input.addEventListener('keydown', (e) => keyEvent(e));
-</script>
+<script src="{% static 'main/autocomplete.js' %}"></script>
 {% endblock %}
