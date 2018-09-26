@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Results for {{ search }}</title>
+{% endblock %}
+
+{% block content %}
+<h1>Results for {{ search }}</h1>
+
+<ol>
+	{% for tech in techs %}
+	<li>{{ tech }}</li>
+	{% endfor %}
+</ol>
+{% endblock %}

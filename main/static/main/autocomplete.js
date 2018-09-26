@@ -5,7 +5,6 @@ const autocompleteContainer = document.querySelector('.autocomplete-container');
 
 input.addEventListener('input', () => {
 	if (input.value.length >= 3) autocomplete(input.value);
-	else updateSuggestions([]);
 });
 
 window.addEventListener('keydown', event => keyEvent(event));
