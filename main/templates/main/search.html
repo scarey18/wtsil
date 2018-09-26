@@ -7,9 +7,84 @@
 {% block content %}
 <h1>Results for {{ search }}</h1>
 
+{% if languages %}
+<h1>Languages</h1>
 <ol>
-	{% for tech in techs %}
-	<li>{{ tech }}</li>
+	{% for language in languages %}
+	<li>{{ language.name }}: {{ language.count }}</li>
 	{% endfor %}
 </ol>
+{% endif %}
+
+{% if frameworks %}
+<h1>Frameworks/CMS</h1>
+<ol>
+	{% for framework in frameworks %}
+	<li>{{ framework.name }}: {{ framework.count }}</li>
+	{% endfor %}
+</ol>
+{% endif %}
+
+{% if platforms %}
+<h1>Platforms/Web Services</h1>
+<ol>
+	{% for platform in platforms %}
+	<li>{{ platform.name }}: {{ platform.count }}</li>
+	{% endfor %}
+</ol>
+{% endif %}
+
+{% if tools %}
+<h1>Libraries/Tools</h1>
+<ol>
+	{% for tool in tools %}
+	<li>{{ tool.name }}: {{ tool.count }}</li>
+	{% endfor %}
+</ol>
+{% endif %}
+
+{% if engines %}
+<h1>Game Engines</h1>
+<ol>
+	{% for engine in engines %}
+	<li>{{ engine.name }}: {{ engine.count }}</li>
+	{% endfor %}
+</ol>
+{% endif %}
+
+{% if concepts %}
+<h1>Concepts/Skills</h1>
+<ol>
+	{% for concept in concepts %}
+	<li>{{ concept.name }}: {{ concept.count }}</li>
+	{% endfor %}
+</ol>
+{% endif %}
+
+{% if os %}
+<h1>Operating Systems</h1>
+<ol>
+	{% for o in os %}
+	<li>{{ o.name }}: {{ o.count }}</li>
+	{% endfor %}
+</ol>
+{% endif %}
+
+{% if databases %}
+<h1>Databases</h1>
+<ol>
+	{% for database in databases %}
+	<li>{{ database.name }}: {{ database.count }}</li>
+	{% endfor %}
+</ol>
+{% endif %}
+
+{% if other %}
+<h1>Other uncategorized keywords</h1>
+<ol>
+	{% for o in other %}
+	<li>{{ o.name }}: {{ o.count }}</li>
+	{% endfor %}
+</ol>
+{% endif %}
 {% endblock %}
