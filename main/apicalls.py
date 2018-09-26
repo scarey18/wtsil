@@ -11,15 +11,15 @@ def search_all_sites(request):
 
 def aggregate_results(search_results):
 	categories = {
-		'languages': [],
-		'frameworks': [],
-		'platforms': [],
-		'tools': [],
-		'engines': [],
-		'concepts': [],
-		'os': [],
-		'databases': [],
-		'other': [],
+		'Languages': [],
+		'Frameworks/CMS': [],
+		'Platforms/Web Services': [],
+		'Libraries/Tools': [],
+		'Game Engines': [],
+		'Concepts/Skills': [],
+		'Operating Systems': [],
+		'Databases': [],
+		'Other uncategorized keywords': [],
 	}
 	for results in search_results:
 		for key in results:
@@ -31,8 +31,8 @@ def aggregate_results(search_results):
 					if tech not in categories[tech.category]:
 						categories[tech.category].append(tech)
 			if not match:
-				new_tech = TechCounter(key, create_regex(key), 'other', count=results[key])
-				categories['other'].append(new_tech)
+				new_tech = TechCounter(key, create_regex(key), 'Other uncategorized keywords', count=results[key])
+				categories['Other uncategorized keywords'].append(new_tech)
 				TECHS.append(new_tech)
 
 	for c in categories:
