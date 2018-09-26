@@ -10,6 +10,9 @@ class TechCounter:
 		self.category = category
 		self.count = count
 
+	def __repr__(self):
+		return self.name
+
 	def match(self, string):
 		if self.regex.search(string):
 			return True
@@ -99,7 +102,7 @@ def aggregate_results(search_results):
 		TechCounter('Java EE', r'^java[- ]?ee$', 'platforms'),
 		TechCounter('Kubernetes', r'^kubernetes|^k8s$', 'platforms'),
 		TechCounter('Apache', r'^apache$', 'platforms'),
-		TechCounter('Google Cloud', r'^google[- ]?cloud', 'plcreate_regex(key)atforms'),
+		TechCounter('Google Cloud', r'^google[- ]?cloud', 'platforms'),
 		TechCounter('Salesforce', r'^salesforce$', 'platforms'),
 		TechCounter('Oracle', r'^oracle$', 'platforms'),
 		TechCounter('ROS', r'^ros$|^robot[- ]?operating[- ]?system$', 'platforms'),
@@ -219,13 +222,13 @@ def aggregate_results(search_results):
 
 def create_regex(string):
 	tokens = '-.?+*,$'
-	regex = r''
+	regex = r'^'
 	for char in string:
 		if char in tokens:
 			regex += f'\{char}'
 		else:
 			regex += char
-	return regex
+	return regex + '$'
 
 def search_stackoverflow(request):
 	location = request.GET['search']
