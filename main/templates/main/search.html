@@ -6,6 +6,7 @@
 
 
 {% block content %}
+
 <h1>Results for {{ search }}</h1>
 
 {% for category, techs in results.items %}
@@ -18,4 +19,5 @@
 	</ol>
 	{% endif %}
 {% endfor %}
+
 {% endblock %}

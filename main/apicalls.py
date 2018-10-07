@@ -1,13 +1,38 @@
-import requests
 import xml.etree.ElementTree as ET
+import aiohttp
+import asyncio
 
 from .techlist import TechCounter, TECHS
 
 
-def search_all_sites(request):
-	return aggregate_results([
-		search_stackoverflow(request),
-	])
+def run_searches(request):
+	loop = asyncio.new_event_loop()
+	asyncio.set_event_loop(loop)
+	results = loop.run_until_complete(search_all(loop, request))
+	return aggregate_results(results)
+
+async def search_all(loop, request):
+	searches = [
+		search_stackoverflow,
+	]
+	async with aiohttp.ClientSession(loop=loop) as session:
+		results = [search(session, request) for search in searches]
+		return await asyncio.gather(*results)
+
+async def search_stackoverflow(session, request):
+	location = request.GET['search']
+	async with session.get('https://stackoverflow.com/jobs/feed', params={'location': location}) as resp:
+		root = ET.fromstring(await resp.text())
+		keywords = {}
+		job_posts = [x for x in root[0] if x.tag == 'item']
+		for post in job_posts:
+			categories = [x for x in post if x.tag == 'category']
+			for category in categories:
+				try: 
+					keywords[category.text] += 1
+				except KeyError:
+					keywords[category.text] = 1
+		return keywords
 
 def aggregate_results(search_results):
 	categories = {
@@ -50,18 +75,3 @@ def create_regex(string):
 			regex += char
 	return regex + '$'
 
-def search_stackoverflow(request):
-	location = request.GET['search']
-	resp = requests.get('https://stackoverflow.com/jobs/feed', params={'location': location})
-	root = ET.fromstring(resp.content)
-	
-	keywords = {}
-	job_posts = [x for x in root[0] if x.tag == 'item']
-	for post in job_posts:
-		categories = [x for x in post if x.tag == 'category']
-		for category in categories:
-			try: 
-				keywords[category.text] += 1
-			except KeyError:
-				keywords[category.text] = 1
-	return keywords
