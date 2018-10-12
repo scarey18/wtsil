@@ -48,10 +48,10 @@ async def search_stackoverflow(session, request):
 
 async def search_github(session, request):
 	location = request.GET['search']
-	categories = {category:[] for category in CATEGORIES}
 	base_url = 'https://jobs.github.com/positions.json'
 	async with session.get(base_url, params={'location': location}) as resp:
 		results = await resp.json()
+		categories = {category:[] for category in CATEGORIES}
 		for post in results:
 			categories = find_match(categories, post['description'], create_new=False)
 		return categories

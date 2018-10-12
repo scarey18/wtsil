@@ -50,7 +50,6 @@ function focus(suggestion) {
 
 function selectSuggestion(text) {
 	input.value = text;
-	document.querySelector('input[type="hidden"]').value = true;
 	form.submit();
 }
 
