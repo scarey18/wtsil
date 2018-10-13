@@ -14,17 +14,15 @@
 		{% if techs %}
 		<section class="category">
 			<h2>{{ category }}</h2>
-			<ol>
-				{% for tech in techs %}
-				<div class="tech-container">
-					<p class="tech-name">{{ tech.name }}</p>
-					<div class="graph">
-						<div class="bar" style="width:{{ tech.graph_percentage }};"></div>
-						<p class="tech-count">{{ tech.count }}</p>
-					</div>
+			{% for tech in techs %}
+			<div class="tech-container">
+				<p class="tech-name">{{ tech.name }}</p>
+				<div class="graph">
+					<div class="bar" style="width:{{ tech.graph_percentage }};"></div>
+					<p class="tech-count">{{ tech.count }}</p>
 				</div>
-				{% endfor %}
-			</ol>
+			</div>
+			{% endfor %}
 		</section>
 		{% endif %}
 	{% endfor %}

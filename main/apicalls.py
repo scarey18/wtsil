@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import aiohttp
 import asyncio
+import os
 
 from .techlist import TechCounter, new_tech_list
 
@@ -28,6 +29,7 @@ async def search_all(loop, request):
 	searches = [
 		search_stackoverflow,
 		search_github,
+		search_authentic_jobs,
 	]
 	async with aiohttp.ClientSession(loop=loop) as session:
 		results = [search(session, request) for search in searches]
@@ -53,6 +55,25 @@ async def search_github(session, request):
 		results = await resp.json()
 		categories = {category:[] for category in CATEGORIES}
 		for post in results:
+			categories = find_match(categories, post['description'], create_new=False)
+		return categories
+
+async def search_authentic_jobs(session, request):
+	base_url = 'https://authenticjobs.com/api/'
+	api_key = os.environ['AUTH_JOBS_KEY']
+	location = request.GET['search']
+	params = {
+		'api_key': api_key,
+		'method': 'aj.jobs.search',
+		'format': 'json',
+		'location': location,
+		'perpage': '100',
+	}
+	async with session.get(base_url, params=params) as resp:
+		results = await resp.json()
+		categories = {category:[] for category in CATEGORIES}
+		for post in results['listings']['listing']:
+			categories = find_match(categories, post['title'], create_new=False)
 			categories = find_match(categories, post['description'], create_new=False)
 		return categories
 
@@ -83,7 +104,7 @@ def aggregate_results(search_results):
 					shared_techs[0].count += tech.count
 	for key in categories:
 		categories[key] = sorted(categories[key], key=lambda tech: -tech.count)
-		max_count = max((tech.count for tech in categories[key]))
+		max_count = max((tech.count for tech in categories[key])) if len(categories[key]) > 0 else None
 		for tech in categories[key]:
 			percent = int((tech.count / max_count) * 100)
 			tech.graph_percentage = f'{percent}%' if percent > 0 else '1%'
@@ -91,10 +112,10 @@ def aggregate_results(search_results):
 
 def create_regex(string):
 	tokens = '-.?+*,$'
-	regex = r'^(.+?\W)?'
+	regex = r''
 	for char in string:
 		if char in tokens:
 			regex += f'\{char}'
 		else:
 			regex += char
-	return regex + r'(\W.+?)?$'
+	return regex
