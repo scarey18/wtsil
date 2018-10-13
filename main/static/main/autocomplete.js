@@ -46,6 +46,7 @@ function focus(suggestion) {
 	const focused = document.querySelector('.focused');
 	if (focused) focused.classList.remove('focused');
 	suggestion.classList.add('focused');
+	input.value = suggestion.textContent;
 }
 
 function selectSuggestion(text) {

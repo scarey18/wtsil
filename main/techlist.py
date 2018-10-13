@@ -7,6 +7,7 @@ class TechCounter:
 		self.regex = re.compile(regex, re.IGNORECASE|re.MULTILINE)
 		self.category = category
 		self.count = count
+		self.graph_percentage = None
 
 	def __repr__(self):
 		return self.name
@@ -21,7 +22,7 @@ def new_tech_list():
 		TechCounter('Assembly', r'^(.+?[ <>\n])?assembly([ <>\n].+?)?$', 'Languages'),
 		TechCounter('Bash', r'^(.+?[ <>\n])?bash([ <>\n].+?)?$', 'Languages'),
 		TechCounter('C', r'^(.+?[ <>\n])?c([ <>\n].+?)?$', 'Languages'),
-		TechCounter('C++', r'^(.+?[ <>\n])?c\+\+([ <>\n].+?)?$', 'Languages'),
+		TechCounter('C++', r'^(.+?[ <>\n])?c\+\+([- ]?\d+)?([ <>\n].+?)?$', 'Languages'),
 		TechCounter('C#', r'^(.+?[ <>\n])?c#([ <>\n].+?)?$', 'Languages'),
 		TechCounter('Clojure', r'^(.+?[ <>\n])?clojure([ <>\n].+?)?$', 'Languages'),
 		TechCounter('Java', r'^(.+?[ <>\n])?java([- ]([ <>\n]+|\d))?([ <>\n].+?)?$', 'Languages'),
@@ -49,7 +50,7 @@ def new_tech_list():
 		TechCounter('JSON', r'^(.+?[ <>\n])?json([ <>\n].+?)?', 'Languages'),
 		TechCounter('Perl', r'^(.+?[ <>\n])?perl([- ]?[56])?([ <>\n].+?)?$', 'Languages'),
 		TechCounter('Less', r'^(.+?[ <>\n])?less([ <>\n].+?)?$', 'Languages'),
-		TechCounter('Sass', r'^(.+?[ <>\n])?s. principles</li>ass([ <>\n].+?)?$', 'Languages'),
+		TechCounter('Sass', r'^(.+?[ <>\n])?sass([ <>\n].+?)?$', 'Languages'),
 		TechCounter('CoffeeScript', r'^(.+?[ <>\n])?coffeescript([ <>\n].+?)?', 'Languages'),
 		TechCounter('Lisp', r'^(.+?[ <>\n])?lisp([ <>\n].+?)?$', 'Languages'),
 		TechCounter('Pascal', r'^(.+?[ <>\n])?pascal([ <>\n].+?)?', 'Languages'),
@@ -65,22 +66,22 @@ def new_tech_list():
 		TechCounter('D', r'^(.+?[ <>\n])?d([ <>\n].+?)?$', 'Languages'),
 
 
-		TechCounter('React', r'^(.+?[ <>\n])?react(.?js)?([ <>\n](?!native).+?)?$', 'Frameworks/CMS'),
-		TechCounter('Node', r'^(.+?[ <>\n])?node(.?js)?([ <>\n].+?)?$', 'Frameworks/CMS'),
+		TechCounter('React', r'^(.+?[ <>\n])?react(\.?js)?([ <>\n](?!native).+?)?$', 'Frameworks/CMS'),
+		TechCounter('Node', r'^(.+?[ <>\n])?node(\.?js)?([ <>\n].+?)?$', 'Frameworks/CMS'),
 		TechCounter('Spring', r'^(.+?[ <>\n])?spring([- ]?mvc)?([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
-		TechCounter('Angular', r'^(.+?[ <>\n])?angular(.?js)?\d?([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
+		TechCounter('Angular', r'^(.+?[ <>\n])?angular(\.?js)?\d?([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
 		TechCounter('Rails', r'^(.+?[ <>\n])?(ruby[- ]?on[- ]?)?rails([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
 		TechCounter('Django', r'^(.+?[ <>\n])?django([- ]?(?!rest)[ <>\n]+)?([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
 		TechCounter('ASP.NET', r'^(.+?[ <>\n])?asp.net([- ]?mvc)?([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
 		TechCounter('React Native', r'^(.+?[ <>\n])?react[- ]?native([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
-		TechCounter('Ember', r'^(.+?[ <>\n])?ember([ <>\n].+?)?$', 'Frameworks/CMS'),
-		TechCounter('Vue', r'^(.+?[ <>\n])?vue(.?js)?([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
+		TechCounter('Ember', r'^(.+?[ <>\n])?ember(\.?js)([ <>\n].+?)?$', 'Frameworks/CMS'),
+		TechCounter('Vue', r'^(.+?[ <>\n])?vue(\.?js)?([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
 		TechCounter('Flask', r'^(.+?[ <>\n])?flask([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
 		TechCounter('Django Rest Framework', r'^(.+?[ <>\n])?drf([ <>\n].+?)?$|^(.+?[ <>\n])?django[- ]?rest[- ]?framework([ <>\n].+?)?$', 'Frameworks/CMS'),
 		TechCounter('CakePHP', r'^(.+?[ <>\n])?cake(php)?([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
 		TechCounter('Phoenix', r'^(.+?[ <>\n])?phoenix([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
-		TechCounter('Express', r'^(.+?[ <>\n])?express(.?js)?([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
-		TechCounter('Backbone', r'^(.+?[ <>\n])?backbone(.?js)?([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
+		TechCounter('Express', r'^(.+?[ <>\n])?express(\.?js)?([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
+		TechCounter('Backbone', r'^(.+?[ <>\n])?backbone(\.?js)?([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
 		TechCounter('Drupal', r'^(.+?[ <>\n])?drupal([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
 		TechCounter('Laravel', r'^(.+?[ <>\n])?laravel([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
 		TechCounter('Symfony', r'^(.+?[ <>\n])?symfony([- ]?framework)?([ <>\n].+?)?$', 'Frameworks/CMS'),
@@ -97,7 +98,7 @@ def new_tech_list():
 		TechCounter('Java EE', r'^(.+?[ <>\n])?java[- ]?ee([ <>\n].+?)?$', 'Platforms/Web Services'),
 		TechCounter('Kubernetes', r'^(.+?[ <>\n])?kubernetes([ <>\n].+?)?$|^(.+?[ <>\n])?k8s([ <>\n].+?)?$', 'Platforms/Web Services'),
 		TechCounter('Apache', r'^(.+?[ <>\n])?apache([ <>\n].+?)?$', 'Platforms/Web Services'),
-		TechCounter('Google Cloud', r'^(.+?[ <>\n])?google[- ]?cloud([ <>\n].+?)?$', 'Platforms/Web Services'),
+		TechCounter('Google Cloud', r'^(.+?[ <>\n])?google[- ]?cloud([- ]?platform)?([ <>\n].+?)?$', 'Platforms/Web Services'),
 		TechCounter('Salesforce', r'^(.+?[ <>\n])?salesforce([ <>\n].+?)?$', 'Platforms/Web Services'),
 		TechCounter('Oracle', r'^(.+?[ <>\n])?oracle([ <>\n].+?)?$', 'Platforms/Web Services'),
 		TechCounter('ROS', r'^(.+?[ <>\n])?ros([ <>\n].+?)?$|^(.+?[ <>\n])?robot[- ]?operating[- ]?system([ <>\n].+?)?$', 'Platforms/Web Services'),
@@ -108,7 +109,7 @@ def new_tech_list():
 		TechCounter('Apache Spark', r'^(.+?[ <>\n])?(apache[- ])?spark([ <>\n].+?)?$', 'Libraries/Tools'),
 		TechCounter('Jenkins', r'^(.+?[ <>\n])?jenkins([ <>\n].+?)?$', 'Libraries/Tools'),
 		TechCounter('Chef', r'^(.+?[ <>\n])?chef([ <>\n].+?)?$', 'Libraries/Tools'),
-		TechCounter('Redux', r'^(.+?[ <>\n])?([ <>\n]+[- ]?)?redux([ <>\n].+?)?$', 'Libraries/Tools'),
+		TechCounter('Redux', r'^(.+?[ <>\n])?(.+[- ])?redux([ <>\n].+?)?$', 'Libraries/Tools'),
 		TechCounter('Selenium', r'^(.+?[ <>\n])?selenium([ <>\n].+?)?$', 'Libraries/Tools'),
 		TechCounter('Jquery', r'^(.+?[ <>\n])?jquery([ <>\n].+?)?$', 'Libraries/Tools'),
 		TechCounter('Elasticsearch', r'^(.+?[ <>\n])?elasticsearch([ <>\n].+?)?$', 'Libraries/Tools'),

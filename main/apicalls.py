@@ -83,6 +83,10 @@ def aggregate_results(search_results):
 					shared_techs[0].count += tech.count
 	for key in categories:
 		categories[key] = sorted(categories[key], key=lambda tech: -tech.count)
+		max_count = max((tech.count for tech in categories[key]))
+		for tech in categories[key]:
+			percent = int((tech.count / max_count) * 100)
+			tech.graph_percentage = f'{percent}%' if percent > 0 else '1%'
 	return categories
 
 def create_regex(string):

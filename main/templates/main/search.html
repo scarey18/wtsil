@@ -7,17 +7,41 @@
 
 {% block content %}
 
-<h1>Results for {{ search }}</h1>
+<div class="content-container">
+	<h1>Results for {{ search }}</h1>
 
-{% for category, techs in results.items %}
-	{% if techs %}
-	<h1>{{ category }}</h1>
-	<ol>
-		{% for tech in techs %}
-		<li>{{ tech.name }}: {{ tech.count }}</li>
-		{% endfor %}
-	</ol>
-	{% endif %}
-{% endfor %}
+	{% for category, techs in results.items %}
+		{% if techs %}
+		<section class="category">
+			<h2>{{ category }}</h2>
+			<ol>
+				{% for tech in techs %}
+				<div class="tech-container">
+					<p class="tech-name">{{ tech.name }}</p>
+					<div class="graph">
+						<div class="bar" style="width:{{ tech.graph_percentage }};"></div>
+						<p class="tech-count">{{ tech.count }}</p>
+					</div>
+				</div>
+				{% endfor %}
+			</ol>
+		</section>
+		{% endif %}
+	{% endfor %}
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+const gray = 'rgba(128, 128, 128, 0.28)';
+let i = 0;
+document.querySelectorAll('.category').forEach(hero => {
+	if (i % 2 === 0) hero.style.backgroundColor = gray;
+	i++;
+});
+</script>
 
 {% endblock %}
