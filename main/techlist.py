@@ -17,9 +17,8 @@ class TechCounter:
 			return True
 
 	def create_regex(self, regex):
-		broken_reg = regex.split('$|')
 		formatted_reg = []
-		for section in broken_reg:
+		for section in regex.split('$|'):
 			formatted_reg.append(r'^(.+?([ <>\n,]|(\\\/)))?' + section + r'(([ <>\n,]|(\\\/)).+?)?$')
 		return re.compile(('|').join(formatted_reg), re.IGNORECASE|re.MULTILINE)
 

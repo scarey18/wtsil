@@ -60,13 +60,11 @@ async def search_github(session, request):
 
 async def search_authentic_jobs(session, request):
 	base_url = 'https://authenticjobs.com/api/'
-	api_key = os.environ['AUTH_JOBS_KEY']
-	location = request.GET['search']
 	params = {
-		'api_key': api_key,
+		'api_key': os.environ['AUTH_JOBS_KEY'],
 		'method': 'aj.jobs.search',
 		'format': 'json',
-		'location': location,
+		'location': request.GET['search'],
 		'perpage': '100',
 	}
 	async with session.get(base_url, params=params) as resp:
@@ -104,10 +102,11 @@ def aggregate_results(search_results):
 					shared_techs[0].count += tech.count
 	for key in categories:
 		categories[key] = sorted(categories[key], key=lambda tech: -tech.count)
-		max_count = max((tech.count for tech in categories[key])) if len(categories[key]) > 0 else None
-		for tech in categories[key]:
-			percent = int((tech.count / max_count) * 100)
-			tech.graph_percentage = f'{percent}%' if percent > 0 else '1%'
+		if key != 'Other uncategorized keywords':
+			max_count = max((tech.count for tech in categories[key])) if len(categories[key]) > 0 else None
+			for tech in categories[key]:
+				percent = int((tech.count / max_count) * 100)
+				tech.graph_percentage = f'{percent}%' if percent > 0 else '1%'
 	return categories
 
 def create_regex(string):

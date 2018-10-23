@@ -14,6 +14,15 @@
 		{% if techs %}
 		<section class="category">
 			<h2>{{ category }}</h2>
+
+			{% if category == 'Other uncategorized keywords' %}
+			<div class="other-keywords">
+				{% for tech in techs %}
+				<p class="other-keyword">{{ tech.name }} ({{ tech.count }})</p>
+				{% endfor %}
+			</div>
+			
+			{% else %}
 			{% for tech in techs %}
 			<div class="tech-container">
 				<p class="tech-name">{{ tech.name }}</p>
@@ -23,6 +32,7 @@
 				</div>
 			</div>
 			{% endfor %}
+			{% endif %}
 		</section>
 		{% endif %}
 	{% endfor %}
@@ -36,8 +46,8 @@
 <script>
 const gray = 'rgba(128, 128, 128, 0.28)';
 let i = 0;
-document.querySelectorAll('.category').forEach(hero => {
-	if (i % 2 === 0) hero.style.backgroundColor = gray;
+document.querySelectorAll('.category').forEach(category => {
+	if (i % 2 === 0) category.style.backgroundColor = gray;
 	i++;
 });
 </script>
