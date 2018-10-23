@@ -1,10 +1,22 @@
 const form = document.querySelector('.searchbar');
 const input = document.querySelector('input');
 const autocompleteContainer = document.querySelector('.autocomplete-container');
+const loadingModal = document.querySelector('.loading-modal');
+const submitBtn = document.querySelector('form button')
 
 
 input.addEventListener('input', () => {
 	if (input.value.length >= 3) autocomplete(input.value);
+});
+
+submitBtn.addEventListener('click', (e) => {
+	e.preventDefault();
+	if (input.value.length >= 3) {
+		form.submit();
+		setTimeout(() => {
+			loadingModal.style.visibility = 'visible';
+		}, 500);
+	}
 });
 
 window.addEventListener('keydown', event => keyEvent(event));
@@ -52,6 +64,9 @@ function focus(suggestion) {
 function selectSuggestion(text) {
 	input.value = text;
 	form.submit();
+	setTimeout(() => {
+		loadingModal.style.visibility = 'visible';
+	}, 500);
 }
 
 function keyEvent(event) {
