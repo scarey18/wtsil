@@ -8,27 +8,36 @@
 
 {% block content %}
 
-<div class="content-container">
-	<h1>What Technology Should I Learn?</h1>
-
-	<form class="searchbar" method="get" autocomplete="off">
-		<div class="autocomplete-container">
-			<input type="text" name="search" placeholder="City, State, Country, etc...">
-		</div>
-		<button type="submit">Search</button>
-	</form>
-
-	<section class="site-info">
-		Description of site and methodology.
-	</section>
-</div>
-
-<div class="loading-modal">
-	<div class="loading-icon-container">
-		<h2>Searching...</h2>
-		<div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+<section class="home-container">
+	<div class="main-search">
+		<h1>What Technology Should I Learn?</h1>
+		{% include 'partials/search_form.html' %}
+		<p>Find out what jobs in your area want from you.</p>
 	</div>
-</div>
+
+	<div class="home-footer">
+		<p>Job boards used:</p>
+		<div class="logos">
+			<a href="https://jobs.github.com/" title="GitHub Jobs">
+				<img src="{% static 'main/images/GitHub-Mark-64px.png' %}">
+			</a>
+			<a href="https://stackoverflow.com/jobs" title="Stack Overflow Jobs">
+				<img src="{% static 'main/images/so-icon.png' %}">
+			</a>
+			<a href="https://authenticjobs.com/" title="Authentic Jobs">
+				<img src="{% static 'main/images/authentic-icon.jpg' %}">
+			</a>
+		</div>
+	</div>
+</section>
+
+<section class="hero">
+	<p class="text">
+		Want to know what types of jobs are most prevalent in a certain location? Type in a city, state, or country and hit search to find out. We search job boards to find posts in that location and look for how often various languages, frameworks, and other keywords appear.
+	</p>
+</section>
+
+{% include 'partials/loading_modal.html' %}
 
 {% endblock %}
 
