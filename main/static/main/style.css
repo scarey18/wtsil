@@ -51,8 +51,8 @@ h2 {
 	align-items: center;
 	width: 100%;
 	max-width: 1024px;
-	margin: 30vh auto 5vh auto;
-	height: 65vh;
+	margin: 27vh auto 5vh auto;
+	height: 68vh;
 }
 
 .main-search {
@@ -176,6 +176,22 @@ h2 {
 	max-height: 64px;
 }
 
+.arrow-container {
+	background-color: #333333;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 47px;
+	width: 47px;
+	margin-top: 2vh;
+}
+
+.arrow-container:hover {
+	background-color: #1f1f1f;
+	cursor: pointer;
+}
+
 .hero {
 	height: 100vh;
 	width: 100%;
@@ -184,6 +200,23 @@ h2 {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+}
+
+.arrow-up-wrapper {
+	position: absolute;
+	top: 105vh;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+#arrow-up {
+	height: 49px;
+	width: 49px;
+}
+
+#arrow-up img {
+	transform: rotate(180deg);
 }
 
 /* Loading modal/icon styling */

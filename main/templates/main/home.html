@@ -28,6 +28,9 @@
 				<img src="{% static 'main/images/authentic-icon.jpg' %}">
 			</a>
 		</div>
+		<div class="arrow-container" id="arrow-down">
+			<img src="{% static 'main/images/arrow-down.png' %}">
+		</div>
 	</div>
 </section>
 
@@ -37,6 +40,12 @@
 	</p>
 </section>
 
+<div class="arrow-up-wrapper">
+	<div class="arrow-container" id="arrow-up">
+		<img src="{% static 'main/images/arrow-down.png' %}">
+	</div>
+</div>
+
 {% include 'partials/loading_modal.html' %}
 
 {% endblock %}
@@ -44,4 +53,5 @@
 
 {% block scripts %}
 <script src="{% static 'main/autocomplete.js' %}"></script>
+<script src="{% static 'main/smoothScroll.js' %}"></script>
 {% endblock %}
