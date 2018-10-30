@@ -5,7 +5,7 @@ const hero = document.querySelector('.hero');
 
 arrowDown.addEventListener('click', () => {
 	window.scrollTo({
-		top: hero.getBoundingClientRect().top,
+		top: window.scrollY + hero.getBoundingClientRect().top,
 		behavior: 'smooth',
 	});
 });

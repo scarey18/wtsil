@@ -9,6 +9,10 @@ input.addEventListener('input', () => {
 	if (input.value.length >= 3) autocomplete(input.value);
 });
 
+input.addEventListener('keyup', () => {
+	if (!input.value) updateSuggestions([]);
+});
+
 submitBtn.addEventListener('click', (e) => {
 	e.preventDefault();
 	if (input.value.length >= 3) {
@@ -25,6 +29,11 @@ window.addEventListener('click', event => {
 	if (event.target !== input && input.value.length < 3) updateSuggestions([]);
 });
 
+window.addEventListener('mousemove', () => {
+	document.querySelectorAll('.suggestion').forEach(suggestion => {
+		suggestion.addEventListener('mouseover', () => focus(suggestion));
+	});
+});
 
 function autocomplete(text) {
 	const categories = "City,Metro%20Area,Subregion,Region,Territory,Country,Zone";
@@ -45,7 +54,6 @@ function updateSuggestions(suggestions) {
 		newDiv.classList.add('suggestion');
 		newDiv.textContent = suggestion.text;
 		newDiv.addEventListener('click', () => selectSuggestion(suggestion.text));
-		newDiv.addEventListener('mouseover', () => focus(newDiv));
 		autocompleteContainer.appendChild(newDiv);
 	});
 
