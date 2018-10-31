@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import aiohttp
 import asyncio
 import os
+import re
 
 from .techlist import TechCounter, new_tech_list
 
@@ -17,6 +18,10 @@ CATEGORIES = [
 	'Databases',
 	'Other uncategorized keywords',
 ]
+
+SPLIT_REGEX = re.compile(r'<.+?>')
+
+UNWANTED_TEXT = ['', '\n']
 
 
 def run_searches(request):
@@ -41,9 +46,7 @@ async def search_stackoverflow(session, request):
 		root = ET.fromstring(await resp.text())
 		job_posts = [x for x in root[0] if x.tag == 'item']
 		for post in job_posts:
-			keywords = [x for x in post if x.tag == 'category']
-			for keyword in keywords:
-				results.append(keyword.text)
+			results += [x.text for x in post if x.tag == 'category']
 		print('Stackoverflow: done')
 		print('Number of results: ' + str(len(results)))
 		return {'results': results, 'create_new': True}
@@ -55,7 +58,7 @@ async def search_github(session, request):
 		json = await resp.json()
 		results = []
 		for post in json:
-			results.append(post['description'])
+			results.append(parse_html(post['description']))
 		print('Github: done')
 		print('Number of results: ' + str(len(results)))
 		return {'results': results, 'create_new': False}
@@ -73,18 +76,22 @@ async def search_authentic_jobs(session, request):
 		json = await resp.json()
 		results = []
 		for post in json['listings']['listing']:
-			results.append(post['title'])
-			results.append(post['description'])
+			results.append(parse_html(post['description']))
 		print('Authentic jobs: done')
 		print('Number of results: ' + str(len(results)))
 		return {'results': results, 'create_new': False}
+
+def parse_html(html):
+	split_html = re.split(SPLIT_REGEX, html)
+	trimmed = [t for t in split_html if t not in UNWANTED_TEXT and not t.startswith('&')]
+	return ', '.join(trimmed)
 
 def aggregate_results(results):
 	categories = {category:[] for category in CATEGORIES}
 	techs = new_tech_list()
 	for r in results:
 		for text in r['results']:
-			categories = find_match(categories, techs, text, create_new=r['create_new'])
+			categories = find_match(categories, techs, text, r['create_new'])
 	for key in categories:
 		categories[key] = sorted(categories[key], key=lambda tech: -tech.count)
 		if key != 'Other uncategorized keywords':
@@ -94,7 +101,7 @@ def aggregate_results(results):
 				tech.graph_percentage = f'{percent}%' if percent > 0 else '1%'
 	return categories
 
-def find_match(categories, techs, text, create_new=True):
+def find_match(categories, techs, text, create_new):
 	match = False
 	for tech in techs:
 		if tech.match(text):
