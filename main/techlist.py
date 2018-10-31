@@ -134,7 +134,7 @@ def new_tech_list():
 		TechCounter('SQLAlchemy', r'sqlalchemy', 'Libraries/Tools'),
 
 
-		TechCounter('Unity3D', r'unity(3d)?', 'Game Engines'),
+		TechCounter('Unity3D', r'unity(3d)?\d?', 'Game Engines'),
 		TechCounter('Unreal Engine', r'unreal([- ]?engine)?', 'Game Engines'),
 		TechCounter('Cry Engine', r'cry([- ]?engine)?', 'Game Engines'),
 

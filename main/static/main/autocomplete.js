@@ -13,8 +13,14 @@ input.addEventListener('keyup', () => {
 	if (!input.value) updateSuggestions([]);
 });
 
-submitBtn.addEventListener('click', (e) => {
-	e.preventDefault();
+input.addEventListener('click', () => {
+	document.querySelectorAll('.suggestion').forEach(suggestion => {
+		suggestion.style.visibility = 'visible';
+	});
+});
+
+submitBtn.addEventListener('click', event => {
+	event.preventDefault();
 	if (input.value.length >= 3) {
 		form.submit();
 		setTimeout(() => {
@@ -26,7 +32,11 @@ submitBtn.addEventListener('click', (e) => {
 window.addEventListener('keydown', event => keyEvent(event));
 
 window.addEventListener('click', event => {
-	if (event.target !== input && input.value.length < 3) updateSuggestions([]);
+	if (event.target !== input) {
+		document.querySelectorAll('.suggestion').forEach(suggestion => {
+			suggestion.style.visibility = 'hidden';
+		});
+	}
 });
 
 window.addEventListener('mousemove', () => {

@@ -23,40 +23,42 @@ def run_searches(request):
 	loop = asyncio.new_event_loop()
 	asyncio.set_event_loop(loop)
 	results = loop.run_until_complete(search_all(loop, request))
-	return aggregate_results(results)
+	return aggregate_results(sorted(results, key=lambda r: -r['create_new']))
 
 async def search_all(loop, request):
-	searches = [
-		search_stackoverflow,
-		search_github,
-		search_authentic_jobs,
-	]
 	async with aiohttp.ClientSession(loop=loop) as session:
-		results = [search(session, request) for search in searches]
-		return await asyncio.gather(*results)
+		return await asyncio.gather(
+			asyncio.ensure_future(search_stackoverflow(session, request)),
+			asyncio.ensure_future(search_github(session, request)),
+			asyncio.ensure_future(search_authentic_jobs(session, request)),
+		)
 
 async def search_stackoverflow(session, request):
 	location = request.GET['search']
 	base_url = 'https://stackoverflow.com/jobs/feed'
 	async with session.get(base_url, params={'location': location}) as resp:
+		results = []
 		root = ET.fromstring(await resp.text())
-		categories = {category:[] for category in CATEGORIES}
 		job_posts = [x for x in root[0] if x.tag == 'item']
 		for post in job_posts:
 			keywords = [x for x in post if x.tag == 'category']
 			for keyword in keywords:
-				categories = find_match(categories, keyword.text)
-		return categories
+				results.append(keyword.text)
+		print('Stackoverflow: done')
+		print('Number of results: ' + str(len(results)))
+		return {'results': results, 'create_new': True}
 
 async def search_github(session, request):
 	location = request.GET['search']
 	base_url = 'https://jobs.github.com/positions.json'
 	async with session.get(base_url, params={'location': location}) as resp:
-		results = await resp.json()
-		categories = {category:[] for category in CATEGORIES}
-		for post in results:
-			categories = find_match(categories, post['description'], create_new=False)
-		return categories
+		json = await resp.json()
+		results = []
+		for post in json:
+			results.append(post['description'])
+		print('Github: done')
+		print('Number of results: ' + str(len(results)))
+		return {'results': results, 'create_new': False}
 
 async def search_authentic_jobs(session, request):
 	base_url = 'https://authenticjobs.com/api/'
@@ -68,38 +70,21 @@ async def search_authentic_jobs(session, request):
 		'perpage': '100',
 	}
 	async with session.get(base_url, params=params) as resp:
-		results = await resp.json()
-		categories = {category:[] for category in CATEGORIES}
-		for post in results['listings']['listing']:
-			categories = find_match(categories, post['title'], create_new=False)
-			categories = find_match(categories, post['description'], create_new=False)
-		return categories
+		json = await resp.json()
+		results = []
+		for post in json['listings']['listing']:
+			results.append(post['title'])
+			results.append(post['description'])
+		print('Authentic jobs: done')
+		print('Number of results: ' + str(len(results)))
+		return {'results': results, 'create_new': False}
 
-def find_match(categories, text, create_new=True):
-	match = False
-	techs = new_tech_list()
-	for tech in techs:
-		if tech.match(text):
-			tech.count += 1
-			match = True
-			if tech not in categories[tech.category]:
-				categories[tech.category].append(tech)
-	if not match and create_new:
-		new_tech = TechCounter(text, create_regex(text), 'Other uncategorized keywords', count=1)
-		categories['Other uncategorized keywords'].append(new_tech)
-		techs.append(new_tech)
-	return categories
-
-def aggregate_results(search_results):
+def aggregate_results(results):
 	categories = {category:[] for category in CATEGORIES}
-	for results in search_results:
-		for key in results:
-			for tech in results[key]:
-				shared_techs = [t for t in categories[key] if t.name == tech.name]
-				if len(shared_techs) == 0:
-					categories[key].append(tech)
-				else:
-					shared_techs[0].count += tech.count
+	techs = new_tech_list()
+	for r in results:
+		for text in r['results']:
+			categories = find_match(categories, techs, text, create_new=r['create_new'])
 	for key in categories:
 		categories[key] = sorted(categories[key], key=lambda tech: -tech.count)
 		if key != 'Other uncategorized keywords':
@@ -107,6 +92,20 @@ def aggregate_results(search_results):
 			for tech in categories[key]:
 				percent = int((tech.count / max_count) * 100)
 				tech.graph_percentage = f'{percent}%' if percent > 0 else '1%'
+	return categories
+
+def find_match(categories, techs, text, create_new=True):
+	match = False
+	for tech in techs:
+		if tech.match(text):
+			tech.count += 1
+			match = True
+			if tech.count == 1:
+				categories[tech.category].append(tech)
+	if not match and create_new:
+		new_tech = TechCounter(text, create_regex(text), 'Other uncategorized keywords', count=1)
+		categories['Other uncategorized keywords'].append(new_tech)
+		techs.append(new_tech)
 	return categories
 
 def create_regex(string):
