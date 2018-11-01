@@ -11,34 +11,39 @@
 <div class="content-container">
 	{% include 'partials/search_form.html' with search=search %}
 
+	{% if no_results %}
+	<p class="no_results">We couldn't find any job posts for this location. Your search might have been too specific, or be located in a country where our sites don't have much information. Please try another search.</p>
+
+	{% else %}
 	<h1 class="search-title">Results for {{ search }}</h1>
 
-	{% for category, techs in results.items %}
-		{% if techs %}
-		<section class="category">
-			<h2>{{ category }}</h2>
+		{% for category, techs in results.items %}
+			{% if techs %}
+			<section class="category">
+				<h2>{{ category }}</h2>
 
-			{% if category == 'Other uncategorized keywords' %}
-			<div class="other-keywords">
-				{% for tech in techs %}
-				<p class="other-keyword">{{ tech.name }} ({{ tech.count }})</p>
-				{% endfor %}
-			</div>
-			
-			{% else %}
-			{% for tech in techs %}
-			<div class="tech-container">
-				<p class="tech-name">{{ tech.name }}</p>
-				<div class="graph">
-					<div class="bar" style="width:{{ tech.graph_percentage }};"></div>
-					<p class="tech-count">{{ tech.count }}</p>
+				{% if category == 'Other uncategorized keywords' %}
+				<div class="other-keywords">
+					{% for tech in techs %}
+					<p class="other-keyword">{{ tech.name }} ({{ tech.count }})</p>
+					{% endfor %}
 				</div>
-			</div>
-			{% endfor %}
+				
+				{% else %}
+				{% for tech in techs %}
+				<div class="tech-container">
+					<p class="tech-name">{{ tech.name }}</p>
+					<div class="graph">
+						<div class="bar" style="width:{{ tech.graph_percentage }};"></div>
+						<p class="tech-count">{{ tech.count }}</p>
+					</div>
+				</div>
+				{% endfor %}
+				{% endif %}
+			</section>
 			{% endif %}
-		</section>
-		{% endif %}
-	{% endfor %}
+		{% endfor %}
+	{% endif %}
 </div>
 
 {% include 'partials/loading_modal.html' %}

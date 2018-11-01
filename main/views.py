@@ -16,8 +16,8 @@ def home(request):
 			cache.set(search, results, 60 * 60 * 12)
 		else:
 			print('Retrieved from cache')
-		template = 'main/search.html' if max((len(results[x]) for x in results)) > 0 else 'main/no_results.html'
-		context = {'search': search, 'results': results}
+		no_results = max((len(results[x]) for x in results)) == 0
+		context = {'search': search, 'results': results, 'no_results': no_results}
 		print(time.time() - start)
-		return render(request, template, context)
+		return render(request, 'main/search.html', context)
 	return render(request, 'main/home.html')

@@ -48,7 +48,7 @@ async def search_stackoverflow(session, request):
 		for post in job_posts:
 			results += [x.text for x in post if x.tag == 'category']
 		print('Stackoverflow: done')
-		print('Number of results: ' + str(len(results)))
+		print('Number of results: ' + str(len(job_posts)))
 		return {'results': results, 'create_new': True}
 
 async def search_github(session, request):
@@ -56,9 +56,7 @@ async def search_github(session, request):
 	base_url = 'https://jobs.github.com/positions.json'
 	async with session.get(base_url, params={'location': location}) as resp:
 		json = await resp.json()
-		results = []
-		for post in json:
-			results.append(parse_html(post['description']))
+		results = [parse_html(post['description']) for post in json]
 		print('Github: done')
 		print('Number of results: ' + str(len(results)))
 		return {'results': results, 'create_new': False}

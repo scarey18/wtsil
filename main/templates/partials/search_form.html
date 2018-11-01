@@ -1,6 +1,9 @@
 <form class="searchbar" method="get" autocomplete="off">
 	<div class="autocomplete-container">
-		<input type="text" name="search" placeholder="City, State, Country, etc..." value="{{ search }}">
+		<div class="search-input-container">
+			<input id="search-input" type="text" name="search" placeholder="City, State, Country, etc..." value="{{ search }}">
+			<i id="search-clear" class="fas fa-times"></i>
+		</div>
 	</div>
 	<button type="submit">Search</button>
 </form>

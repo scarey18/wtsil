@@ -2,10 +2,15 @@ const form = document.querySelector('.searchbar');
 const input = document.querySelector('input');
 const autocompleteContainer = document.querySelector('.autocomplete-container');
 const loadingModal = document.querySelector('.loading-modal');
-const submitBtn = document.querySelector('form button')
+const searchClear = document.getElementById('search-clear');
+const submitBtn = document.querySelector('form button');
 
+
+if (input.value) searchClear.style.visibility = 'visible';
 
 input.addEventListener('input', () => {
+	if (input.value) searchClear.style.visibility = 'visible';
+	else searchClear.style.visibility = 'hidden';
 	if (input.value.length >= 3) autocomplete(input.value);
 });
 
@@ -27,6 +32,13 @@ submitBtn.addEventListener('click', event => {
 			loadingModal.style.visibility = 'visible';
 		}, 500);
 	}
+});
+
+searchClear.addEventListener('click', () => {
+	input.value = '';
+	searchClear.style.visibility = 'hidden';
+	updateSuggestions([]);
+	input.focus();
 });
 
 window.addEventListener('keydown', event => keyEvent(event));
