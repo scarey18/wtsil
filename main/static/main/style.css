@@ -8,6 +8,7 @@ html, body {
 	height: auto;
 	width: 100%;
 	line-height: 1.2rem;
+	overflow-x: hidden;
 }
 
 h1 {
@@ -402,6 +403,7 @@ h2 {
 	min-height: 2rem;
 	display: flex;
 	align-items: center;
+	justify-content: flex-start;
 }
 
 .tech-name {
@@ -416,11 +418,24 @@ h2 {
 	justify-content: flex-start;
 }
 
-.bar {
+.bar-container {
 	height: 1.5rem;
-	background-color: red;
+	display: flex;
+}
+
+@keyframes grow {
+	from {min-width: 0%;}
+	to {min-width: 94%;}
+}
+
+.bar {
+	height: 100%;
+	min-width: 94%;
+	background-color: #ce0000;
+	border-radius: 11px;
+	animation: 1.2s ease-in-out grow;
 }
 
 .tech-count {
-	padding-left: 7px;
+	padding-left: 4px;
 }

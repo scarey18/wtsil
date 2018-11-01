@@ -34,8 +34,10 @@
 				<div class="tech-container">
 					<p class="tech-name">{{ tech.name }}</p>
 					<div class="graph">
-						<div class="bar" style="width:{{ tech.graph_percentage }};"></div>
-						<p class="tech-count">{{ tech.count }}</p>
+						<div class="bar-container" style="width:{{ tech.graph_percentage }};">
+							<div class="bar"></div>
+							<p class="tech-count">{{ tech.count }}</p>
+						</div>
 					</div>
 				</div>
 				{% endfor %}
@@ -55,6 +57,7 @@
 
 <script>
 const gray = 'rgba(128, 128, 128, 0.28)';
+
 let i = 0;
 document.querySelectorAll('.category').forEach(category => {
 	if (i % 2 === 0) category.style.backgroundColor = gray;
