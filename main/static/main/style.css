@@ -421,6 +421,7 @@ h2 {
 .bar-container {
 	height: 1.5rem;
 	display: flex;
+	visibility: hidden;
 }
 
 @keyframes grow {
@@ -432,6 +433,9 @@ h2 {
 	height: 100%;
 	min-width: 94%;
 	border-radius: 11px;
+}
+
+.grow {
 	animation: 1.2s ease-in-out grow;
 }
 
