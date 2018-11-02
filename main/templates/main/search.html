@@ -57,10 +57,23 @@
 
 <script>
 const gray = 'rgba(128, 128, 128, 0.28)';
+const palette = [
+	'#ce0000',
+	'#ce5d00',
+	'#007c7c',
+	'#00a500',
+	'#2e108e',
+	'#5b078a',
+	'#cece00',
+	'#fd44a6',
+]
 
 let i = 0;
 document.querySelectorAll('.category').forEach(category => {
 	if (i % 2 === 0) category.style.backgroundColor = gray;
+	category.querySelectorAll('.bar').forEach(bar => {
+		bar.style.backgroundColor = palette[i];
+	});
 	i++;
 });
 </script>

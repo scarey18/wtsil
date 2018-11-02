@@ -35,13 +35,16 @@ async def search_all(loop, request):
 		return await asyncio.gather(
 			asyncio.ensure_future(search_stackoverflow(session, request)),
 			asyncio.ensure_future(search_github(session, request)),
-			asyncio.ensure_future(search_authentic_jobs(session, request)),
+			# asyncio.ensure_future(search_authentic_jobs(session, request)),
 		)
 
 async def search_stackoverflow(session, request):
 	location = request.GET['search']
 	base_url = 'https://stackoverflow.com/jobs/feed'
 	async with session.get(base_url, params={'location': location}) as resp:
+		if resp.status != 200:
+			print(resp)
+			return {}
 		results = []
 		root = ET.fromstring(await resp.text())
 		job_posts = [x for x in root[0] if x.tag == 'item']
@@ -55,6 +58,9 @@ async def search_github(session, request):
 	location = request.GET['search']
 	base_url = 'https://jobs.github.com/positions.json'
 	async with session.get(base_url, params={'location': location}) as resp:
+		if resp.status != 200:
+			print(resp)
+			return {}
 		json = await resp.json()
 		results = [parse_html(post['description']) for post in json]
 		print('Github: done')
@@ -71,6 +77,9 @@ async def search_authentic_jobs(session, request):
 		'perpage': '100',
 	}
 	async with session.get(base_url, params=params) as resp:
+		if resp.status != 200:
+			print(resp)
+			return {}
 		json = await resp.json()
 		results = []
 		for post in json['listings']['listing']:
