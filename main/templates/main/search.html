@@ -9,7 +9,12 @@
 {% block content %}
 
 <div class="content-container">
-	{% include 'partials/search_form.html' with search=search %}
+	<div class="search-logo-container">
+		<a href="{% url 'main:home' %}">
+			<img id="results-logo" src="{% static 'main/images/wtsil-logo.png' %}">
+		</a>
+		{% include 'partials/search_form.html' with search=search %}
+	</div>
 
 	{% if no_results %}
 	<p class="no_results">We couldn't find any job posts for this location. Your search might have been too specific, or be located in a state or country where our sites don't have much information. Please try another search.</p>
@@ -47,6 +52,9 @@
 		{% endfor %}
 	{% endif %}
 </div>
+<div class="arrow-container fixed-arrow" id="arrow-up">
+	<img src="{% static 'main/images/arrow-down.png' %}">
+</div>
 
 {% include 'partials/loading_modal.html' %}
 
@@ -67,14 +75,14 @@ const palette = [
 	'#cece00',
 	'#fd44a6',
 ]
-const bars = [...document.querySelectorAll('.bar-container')];
+const bars = [];
 
 let i = 0;
 document.querySelectorAll('.category').forEach(category => {
 	if (i % 2 === 0) category.style.backgroundColor = gray;
 	category.querySelectorAll('.bar-container').forEach(container => {
 		container.querySelector('.bar').style.backgroundColor = palette[i];
-		checkIfOnScreen(container);
+		if (!checkIfOnScreen(container)) bars.push(container);
 	});
 	i++;
 });
@@ -88,9 +96,11 @@ function checkIfOnScreen(container) {
 		container.style.visibility = 'visible';
 		container.querySelector('.bar').classList.add('grow');
 		bars.splice(bars.indexOf(container), 1);
+		return true;
 	}
 }
 </script>
 <script src="{% static 'main/autocomplete.js' %}"></script>
+<script src="{% static 'main/smoothScroll.js' %}"></script>
 
 {% endblock %}
