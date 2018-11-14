@@ -227,9 +227,14 @@ h2 {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 47px;
-	width: 47px;
+	height: auto;
+	width: auto;
 	margin-top: 2vh;
+}
+
+.arrow-container img {
+	height: 5vmin;
+	min-height: 30px;
 }
 
 .arrow-container:hover {
@@ -253,11 +258,6 @@ h2 {
 	width: 100%;
 	display: flex;
 	justify-content: center;
-}
-
-#arrow-up {
-	height: 49px;
-	width: 49px;
 }
 
 #arrow-up img {
@@ -464,7 +464,7 @@ h2 {
 
 .fixed-arrow {
 	position: fixed;
-	top: 90vh;
-	left: 90vw;
+	bottom: 5vh;
+	right: 5vw;
 	visibility: hidden;
 }

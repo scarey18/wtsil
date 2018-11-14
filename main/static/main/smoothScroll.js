@@ -4,10 +4,12 @@ const arrowDown = document.querySelector('#arrow-down');
 const arrowUp = document.querySelector('#arrow-up');
 const fixedArrow = document.querySelector('.fixed-arrow');
 
-window.addEventListener('scroll', () => {
-	if (window.scrollY > window.innerHeight) fixedArrow.style.visibility = 'visible';
-	else fixedArrow.style.visibility = 'hidden';
-});
+if (fixedArrow) {
+	window.addEventListener('scroll', () => {
+		if (window.scrollY > window.innerHeight) fixedArrow.style.visibility = 'visible';
+		else fixedArrow.style.visibility = 'hidden';
+	});
+}
 
 [homeLogo, arrowDown].forEach(element => {
 	if (!element) return;
@@ -19,9 +21,11 @@ window.addEventListener('scroll', () => {
 	});
 });
 
-arrowUp.addEventListener('click', () => {
-	window.scrollTo({
-		top: 0,
-		behavior: 'smooth',
+if (arrowUp) {
+	arrowUp.addEventListener('click', () => {
+		window.scrollTo({
+			top: 0,
+			behavior: 'smooth',
+		});
 	});
-});
+}
