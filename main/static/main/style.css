@@ -221,25 +221,14 @@ h2 {
 	max-height: 64px;
 }
 
-.arrow-container {
-	background-color: #3333339c;
-	border-radius: 50%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: auto;
-	width: auto;
-	margin-top: 2vh;
-}
-
-.arrow-container img {
-	height: 5vmin;
-	min-height: 30px;
-}
-
-.arrow-container:hover {
-	background-color: #1f1f1f;
+.scroll-arrow {
+	font-size: 2rem;
 	cursor: pointer;
+	color: #333333ba;
+}
+
+#arrow-down {
+	margin-top: 2vh;
 }
 
 .hero {
@@ -254,14 +243,10 @@ h2 {
 
 .arrow-up-wrapper {
 	position: absolute;
-	top: 103vh;
+	top: 105vh;
 	width: 100%;
 	display: flex;
 	justify-content: center;
-}
-
-#arrow-up img {
-	transform: rotate(180deg);
 }
 
 
