@@ -6,7 +6,7 @@ const fixedArrow = document.querySelector('.fixed-arrow');
 
 if (fixedArrow) {
 	window.addEventListener('scroll', () => {
-		if (window.scrollY > window.innerHeight) fixedArrow.style.visibility = 'visible';
+		if (window.scrollY >= window.innerHeight) fixedArrow.style.visibility = 'visible';
 		else fixedArrow.style.visibility = 'hidden';
 	});
 }

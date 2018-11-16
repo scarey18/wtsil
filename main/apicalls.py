@@ -35,7 +35,7 @@ async def search_all(loop, request):
 		return await asyncio.gather(
 			asyncio.ensure_future(search_stackoverflow(session, request)),
 			asyncio.ensure_future(search_github(session, request)),
-			# asyncio.ensure_future(search_authentic_jobs(session, request)),
+			#asyncio.ensure_future(search_authentic_jobs(session, request)),
 		)
 
 async def search_stackoverflow(session, request):

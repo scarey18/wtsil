@@ -8,7 +8,7 @@
 
 {% block content %}
 
-<div class="content-container">
+<main class="content-container">
 	<div class="search-logo-container">
 		<a href="{% url 'main:home' %}">
 			<img id="results-logo" src="{% static 'main/images/wtsil-logo.png' %}">
@@ -51,7 +51,7 @@
 			{% endif %}
 		{% endfor %}
 	{% endif %}
-</div>
+</main>
 <i class="fa fa-arrow-circle-up scroll-arrow fixed-arrow" id="arrow-up"></i>
 
 {% include 'partials/loading_modal.html' %}

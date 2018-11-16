@@ -5,6 +5,8 @@ const loadingModal = document.querySelector('.loading-modal');
 const searchClear = document.getElementById('search-clear');
 const submitBtn = document.querySelector('form button');
 
+let newSuggestions = false;
+
 
 if (input.value) searchClear.style.visibility = 'visible';
 
@@ -52,9 +54,12 @@ window.addEventListener('click', event => {
 });
 
 window.addEventListener('mousemove', () => {
-	document.querySelectorAll('.suggestion').forEach(suggestion => {
-		suggestion.addEventListener('mouseover', () => focus(suggestion));
-	});
+	if (newSuggestions) {
+		document.querySelectorAll('.suggestion').forEach(suggestion => {
+			suggestion.addEventListener('mouseover', () => focus(suggestion));
+		});
+		newSuggestions = false;
+	}
 });
 
 function autocomplete(text) {
@@ -81,6 +86,7 @@ function updateSuggestions(suggestions) {
 
 	if (suggestions.length > 0) {
 		document.querySelector('.suggestion').classList.add('focused');
+		newSuggestions = true;
 	}
 }
 
