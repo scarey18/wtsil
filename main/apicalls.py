@@ -35,7 +35,6 @@ async def search_all(loop, request):
 		return await asyncio.gather(
 			asyncio.ensure_future(search_stackoverflow(session, request)),
 			asyncio.ensure_future(search_github(session, request)),
-			#asyncio.ensure_future(search_authentic_jobs(session, request)),
 		)
 
 async def search_stackoverflow(session, request):
@@ -64,27 +63,6 @@ async def search_github(session, request):
 		json = await resp.json()
 		results = [parse_html(post['description']) for post in json]
 		print('Github: done')
-		print('Number of results: ' + str(len(results)))
-		return {'results': results, 'create_new': False}
-
-async def search_authentic_jobs(session, request):
-	base_url = 'https://authenticjobs.com/api/'
-	params = {
-		'api_key': os.environ['AUTH_JOBS_KEY'],
-		'method': 'aj.jobs.search',
-		'format': 'json',
-		'location': request.GET['search'],
-		'perpage': '100',
-	}
-	async with session.get(base_url, params=params) as resp:
-		if resp.status != 200:
-			print(resp)
-			return {}
-		json = await resp.json()
-		results = []
-		for post in json['listings']['listing']:
-			results.append(parse_html(post['description']))
-		print('Authentic jobs: done')
 		print('Number of results: ' + str(len(results)))
 		return {'results': results, 'create_new': False}
 
