@@ -17,7 +17,7 @@ def results_view(request, search):
 	results = cache.get(search)
 	if results is None:
 		print('Making API calls')
-		results = run_searches(request)
+		results = run_searches(search)
 		cache.set(search, results, 60 * 60 * 12)
 	else:
 		print('Retrieved from cache')

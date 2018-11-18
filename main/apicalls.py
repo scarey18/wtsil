@@ -24,52 +24,56 @@ SPLIT_REGEX = re.compile(r'<.+?>')
 UNWANTED_TEXT = ['', '\n']
 
 
-def run_searches(request):
+def run_searches(search):
 	loop = asyncio.new_event_loop()
 	asyncio.set_event_loop(loop)
-	results = loop.run_until_complete(search_all(loop, request))
+	results = loop.run_until_complete(search_all(loop, search))
 	return aggregate_results(sorted(results, key=lambda r: -r['create_new']))
 
-async def search_all(loop, request):
+
+async def search_all(loop, search):
 	async with aiohttp.ClientSession(loop=loop) as session:
 		return await asyncio.gather(
-			asyncio.ensure_future(search_stackoverflow(session, request)),
-			asyncio.ensure_future(search_github(session, request)),
+			asyncio.ensure_future(search_stackoverflow(session, search)),
+			asyncio.ensure_future(search_github(session, search)),
 		)
 
-async def search_stackoverflow(session, request):
-	location = request.GET['search']
+
+async def search_stackoverflow(session, search):
 	base_url = 'https://stackoverflow.com/jobs/feed'
-	async with session.get(base_url, params={'location': location}) as resp:
+	async with session.get(base_url, params={'location': search}) as resp:
+		results_dict = {'results': [], 'create_new': True, 'status': resp.status}
 		if resp.status != 200:
 			print(resp)
-			return {}
-		results = []
+			return results_dict
 		root = ET.fromstring(await resp.text())
 		job_posts = [x for x in root[0] if x.tag == 'item']
 		for post in job_posts:
-			results += [x.text for x in post if x.tag == 'category']
+			results_dict['results'] += [x.text for x in post if x.tag == 'category']
 		print('Stackoverflow: done')
-		print('Number of results: ' + str(len(job_posts)))
-		return {'results': results, 'create_new': True}
+		print(f'Number of results: {len(job_posts)}')
+		return results_dict
 
-async def search_github(session, request):
-	location = request.GET['search']
+
+async def search_github(session, search):
 	base_url = 'https://jobs.github.com/positions.json'
-	async with session.get(base_url, params={'location': location}) as resp:
+	async with session.get(base_url, params={'location': search}) as resp:
+		results_dict = {'results': [], 'create_new': True, 'status': resp.status}
 		if resp.status != 200:
 			print(resp)
-			return {}
+			return results_dict
 		json = await resp.json()
-		results = [parse_html(post['description']) for post in json]
+		results_dict['results'] = [parse_html(post['description']) for post in json]
 		print('Github: done')
-		print('Number of results: ' + str(len(results)))
-		return {'results': results, 'create_new': False}
+		print(f'Number of results: {len(results_dict["results"])}')
+		return results_dict
+
 
 def parse_html(html):
 	split_html = re.split(SPLIT_REGEX, html)
 	trimmed = [t for t in split_html if t not in UNWANTED_TEXT and not t.startswith('&')]
 	return ', '.join(trimmed)
+
 
 def aggregate_results(results):
 	categories = {category:[] for category in CATEGORIES}
@@ -86,6 +90,7 @@ def aggregate_results(results):
 				tech.graph_percentage = f'{percent}%' if percent > 0 else '1%'
 	return categories
 
+
 def find_match(categories, techs, text, create_new):
 	match = False
 	for tech in techs:
@@ -99,6 +104,7 @@ def find_match(categories, techs, text, create_new):
 		categories['Other uncategorized keywords'].append(new_tech)
 		techs.append(new_tech)
 	return categories
+	
 
 def create_regex(string):
 	tokens = '-.?+*,$'
