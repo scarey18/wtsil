@@ -1,7 +1,6 @@
 import xml.etree.ElementTree as ET
 import aiohttp
 import asyncio
-import os
 import re
 
 from .techlist import TechCounter, new_tech_list
@@ -104,7 +103,7 @@ def find_match(categories, techs, text, create_new):
 		categories['Other uncategorized keywords'].append(new_tech)
 		techs.append(new_tech)
 	return categories
-	
+
 
 def create_regex(string):
 	tokens = '-.?+*,$'
