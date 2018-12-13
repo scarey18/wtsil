@@ -98,7 +98,7 @@ def find_match(categories, techs, text, create_new):
 			match = True
 			if tech.count == 1:
 				categories[tech.category].append(tech)
-	if not match and create_new:
+	if not match and create_new and text != '':
 		new_tech = TechCounter(text, create_regex(text), 'Other uncategorized keywords', count=1)
 		categories['Other uncategorized keywords'].append(new_tech)
 		techs.append(new_tech)
