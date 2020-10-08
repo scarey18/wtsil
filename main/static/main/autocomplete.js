@@ -65,8 +65,9 @@ window.addEventListener('mousemove', () => {
 function autocomplete(text) {
 	const categories = "City,Metro%20Area,Subregion,Region,Territory,Country,Zone";
 	const url = `http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?text=${text}&category=${categories}&f=json`;
+	const params = {mode: 'no-cors'}
 
-	fetch(url).then(response => {
+	fetch(url, params).then(response => {
 		if (response.ok) return response.json();
 	}).then(data => updateSuggestions(data.suggestions));
 }
